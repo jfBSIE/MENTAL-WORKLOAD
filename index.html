@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA TLX App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1E90FF; /* Blue background */
+            color: #FFFFFF; /* White text color for contrast */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #FFFFFF; /* White background for containers */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            max-height: 3000px;
+            text-align: center;
+            color: #000000; /* Black text color inside containers */
+        }
+
+        h1, h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #000000; /* Black text color for headers */
+        }
+
+        .slider-container, .input-container, .comparison-container {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #000000; /* Black text color for labels */
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 2px solid #1E90FF; /* Blue border */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        button {
+            background-color: #FFA500; /* Orange button color */
+            color: #FFFFFF; /* White text color */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer;
+            font-size: 16px; /* Larger font size */
+            transition: background-color 0.3s; /* Smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #FF4500; /* Darker orange on hover */
+        }
+
+        #result, #pair-results, #final-results, #report {
+            margin-top: 20px;
+        }
+
+        .bullet-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bullet-container input[type="radio"] {
+            display: none;
+        }
+
+        .bullet-container label {
+            cursor: pointer;
+            background-color: #e0e0e0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        .bullet-container label::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .bullet-container input[type="radio"]:checked + label::before {
+            content: attr(data-value);
+            display: block;
+        }
+
+        .bullet-container input[type="radio"]:checked + label {
+            background-color: #1E90FF; /* Blue bullet when selected */
+            color: white;
+        }
+
+        .comparison-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comparison-container label {
+            margin: 0 10px;
+        }
+
+        .slider-container {
+            margin-bottom: -10px;
+        }
+        
+        .question {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: -20px;
+            color: #000000; /* Black text color */
+        }
+        
+        .line-scale {
+            position: relative;
+            height: 60px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scale-label {
+            position: absolute;
+            top: 45px;
+            font-size: 14px;
+            color: #000000; /* Black text color */
+        }
+        
+        .scale-label.left {
+            left: 0;
+        }
+        
+        .scale-label.right {
+            right: 0;
+        }
+        
+        .line-scale .horizontal-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: #000000; /* Black line */
+        }
+        
+        .line-scale label {
+            position: relative;
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+        }
+        
+        .line-scale label span {
+            display: block;
+            width: 1px;
+            height: 20px;
+            background: #000000; /* Black scale marks */
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .line-scale label span[data-value="50"] {
+            height: 30px;
+            background: #000000;
+            font-weight: bold;
+        }
+        
+        .line-scale label span::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #000000; /* Black border */
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        .line-scale input[type="radio"] {
+            display: none;
+        }
+        
+        .line-scale input[type="radio"]:checked + label span::before {
+            background-color: transparent;
+            border-color: #1E90FF; /* Blue border when selected */
+        }                                 
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #000000; /* Black border */
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            color: #000000; /* Black text color */
+        }
+
+        ul {
+            list-style-type: none; 
+            padding: 0;
+        }
+    </style>
+</head> 
+<body>
+    <div class="container" id="landing-page">
+        <h1>NASA Task Load Index (TLX)</h1>
+        <button onclick="showFormPage()">Get Started</button>
+    </div>
+
+    <div class="container" id="form-page" style="display:none;">
+        <h2>Participant Information</h2>
+        <form id="info-form">
+            <div class="input-container">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-container">
+                <label for="age">Age:</label>
+                <input type="text" id="age" name="age" required>
+            </div>
+            <div class="input-container">
+                <label for="gender">Gender:</label>
+                <input type="text" id="gender" name="gender" required>
+            </div>
+            <div class="input-container">
+                <label for="block-section">Block Section:</label>
+                <input type="text" id="block-section" name="block-section" required>
+            </div>
+            <div class="input-container">
+                <label for="occupation">Occupation:</label>
+                <input type="text" id="occupation" name="occupation" required>
+            </div>
+            <button type="button" onclick="showPairComparisonPage()">Next</button>
+        </form>
+    </div>
+
+    <div class="container" id="pair-comparison-page" style="display:none;">
+        <h2>Source of Load (Weight)</h2>
+        <form id="pair-comparison-form">
+            <!-- Pair comparison radio buttons will be generated here -->
+        </form>
+        <button type="button" onclick="showPairResults()">Show Pair Results</button>
+        <div id="pair-results" style="display:none;">
+            <h2>Results - Pairs</h2>
+            <!-- Pair results will be displayed here -->
+        </div>
+        <button type="button" onclick="goBackToFormPage()">Back</button>
+        <button type="button" onclick="showTLXPage()">Next</button>
+    </div>
+
+    <div class="container" id="tlx-page" style="display:none;">
+        <h2>Magnitude of Load (Rating)</h2>
+        <form id="tlx-form">
+            <div class="slider-container">
+                <p class="question">How mentally demanding was the task?</p>
+                <label for="mental-demand">Mental Demand: <span id="mental-demand-value">0</span></label>
+                <div class="line-scale" id="mental-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How physically demanding was the task?</p>
+                <label for="physical-demand">Physical Demand: <span id="physical-demand-value">0</span></label>
+                <div class="line-scale" id="physical-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How hurried or rushed was the pace of the task?</p>
+                <label for="temporal-demand">Temporal Demand: <span id="temporal-demand-value">0</span></label>
+                <div class="line-scale" id="temporal-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How successful were you in accomplishing what you were asked to do?</p>
+                <label for="performance">Performance: <span id="performance-value">0</span></label>
+                <div class="line-scale" id="performance-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How hard did you have to work to accomplish your level of performance?</p>
+                <label for="effort">Effort: <span id="effort-value">0</span></label>
+                <div class="line-scale" id="effort-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How insecure, discouraged, irritated, stressed, and annoyed were you?</p>
+                <label for="frustration">Frustration: <span id="frustration-value">0</span></label>
+                <div class="line-scale" id="frustration-container"></div>
+            </div>                                    
+            
+        </form>
+        <div id="final-results" style="display:none;">
+            <h2>Final Results</h2>
+            <p>Mental Demand: <span id="final-mental-demand">0</span></p>
+            <p>Physical Demand: <span id="final-physical-demand">0</span></p>
+            <p>Temporal Demand: <span id="final-temporal-demand">0</span></p>
+            <p>Performance: <span id="final-performance">0</span></p>
+            <p>Effort: <span id="final-effort">0</span></p>
+            <p>Frustration: <span id="final-frustration">0</span></p>
+            <h2>Perceived Workload - Global Index: <span id="tlx-score">0</span></h2>
+        </div>
+        <button type="button" onclick="goBackToPairComparisonPage()">Back</button>
+        <button type="button" onclick="calculateTLX()">Calculate TLX</button>
+        <button type="button" onclick="generateReport()">Generate Report</button>        
+    </div>
+
+    <div class="container" id="report-page" style="display:none;">
+        <h2>Participants Report</h2>
+        <div id="report"></div>
+    </div>
+
+    <script>
+        const factors = ['Mental Demand', 'Physical Demand', 'Temporal Demand', 'Performance', 'Effort', 'Frustration'];
+        const participants = [];
+        const weights = {
+            "Mental Demand": 2,
+            "Physical Demand": 2,
+            "Temporal Demand": 1,
+            "Performance": 4,
+            "Effort": 5,
+            "Frustration": 1
+        };
+    
+        function showFormPage() {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('form-page').style.display = 'block';
+        }
+    
+        function showPairComparisonPage() {
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('pair-comparison-page').style.display = 'block';
+    
+            const pairComparisons = [
+                ['Mental Demand', 'Physical Demand'],
+                ['Mental Demand', 'Temporal Demand'],
+                ['Mental Demand', 'Performance'],
+                ['Mental Demand', 'Effort'],
+                ['Mental Demand', 'Frustration'],
+                ['Physical Demand', 'Temporal Demand'],
+                ['Physical Demand', 'Performance'],
+                ['Physical Demand', 'Effort'],
+                ['Physical Demand', 'Frustration'],
+                ['Temporal Demand', 'Performance'],
+                ['Temporal Demand', 'Effort'],
+                ['Temporal Demand', 'Frustration'],
+                ['Performance', 'Effort'],
+                ['Performance', 'Frustration'],
+                ['Effort', 'Frustration']
+            ];
+    
+            const pairComparisonForm = document.getElementById('pair-comparison-form');
+            pairComparisonForm.innerHTML = ''; // Clear any existing content
+    
+            pairComparisons.forEach((pair, index) => {
+                const comparisonContainer = document.createElement('div');
+                comparisonContainer.className = 'comparison-container';
+    
+                const radio1 = document.createElement('input');
+                radio1.type = 'radio';
+                radio1.id = `pair-${index}-1`;
+                radio1.name = `pair-${index}`;
+                radio1.value = pair[0];
+                comparisonContainer.appendChild(radio1);
+    
+                const label1 = document.createElement('label');
+                label1.htmlFor = `pair-${index}-1`;
+                label1.textContent = pair[0];
+                comparisonContainer.appendChild(label1);
+    
+                const radio2 = document.createElement('input');
+                radio2.type = 'radio';
+                radio2.id = `pair-${index}-2`;
+                radio2.name = `pair-${index}`;
+                radio2.value = pair[1];
+                comparisonContainer.appendChild(radio2);
+    
+                const label2 = document.createElement('label');
+                label2.htmlFor = `pair-${index}-2`;
+                label2.textContent = pair[1];
+                comparisonContainer.appendChild(label2);
+    
+                pairComparisonForm.appendChild(comparisonContainer);
+            });
+        }
+    
+        function showPairResults() {
+            const pairResultsContainer = document.getElementById('pair-results');
+            pairResultsContainer.innerHTML = ''; // Clear any existing content
+    
+            const selectedPairs = {};
+    
+            factors.forEach(factor => {
+                selectedPairs[factor] = 0;
+            });
+    
+            const pairComparisons = document.querySelectorAll('#pair-comparison-form input[type="radio"]:checked');
+    
+            pairComparisons.forEach(pair => {
+                selectedPairs[pair.value]++;
+            });
+    
+            let resultHtml = '<ul>';
+            factors.forEach(factor => {
+                resultHtml += `<li>${factor}: ${selectedPairs[factor]}</li>`;
+                weights[factor] = selectedPairs[factor];
+            });
+            resultHtml += '</ul>';
+    
+            pairResultsContainer.innerHTML = resultHtml;
+            pairResultsContainer.style.display = 'block';
+        }
+    
+        function showTLXPage() {
+            document.getElementById('pair-comparison-page').style.display = 'none';
+            document.getElementById('tlx-page').style.display = 'block';
+        
+            const factors = [
+                'Mental Demand',
+                'Physical Demand',
+                'Temporal Demand',
+                'Performance',
+                'Effort',
+                'Frustration'
+            ];
+        
+            const questions = {
+                'Mental Demand': 'How mentally demanding was the task?',
+                'Physical Demand': 'How physically demanding was the task?',
+                'Temporal Demand': 'How hurried or rushed was the pace of the task?',
+                'Performance': 'How successful were you in accomplishing what you were asked to do?',
+                'Effort': 'How hard did you have to work to accomplish your level of performance?',
+                'Frustration': 'How insecure, discouraged, irritated, stressed, and annoyed were you?'
+            };
+        
+            factors.forEach(factor => {
+                const container = document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-container`);
+                container.innerHTML = `
+                    <div class="horizontal-line"></div>
+                    <span class="scale-label left">Very Low</span>
+                    <span class="scale-label right">Very High</span>
+                `;
+                for (let i = 0; i <= 100; i += 5) {
+                    const inputId = `${factor.toLowerCase().replace(' ', '-')}-${i}`;
+                    container.innerHTML += `
+                        <input type="radio" id="${inputId}" name="${factor.toLowerCase().replace(' ', '-')}" value="${i}">
+                        <label for="${inputId}"><span data-value="${i}"></span></label>
+                    `;
+                }
+            });
+        
+            // Add event listeners to update the span text on selection
+            factors.forEach(factor => {
+                const container = document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-container`);
+                container.addEventListener('change', (event) => {
+                    if (event.target.type === 'radio') {
+                        document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-value`).textContent = event.target.value;
+                    }
+                });
+            });
+        }                      
+        
+        function goBackToFormPage() {
+            document.getElementById('pair-comparison-page').style.display = 'none';
+            document.getElementById('form-page').style.display = 'block';
+        }
+        
+        function goBackToPairComparisonPage() {
+            document.getElementById('tlx-page').style.display = 'none';
+            document.getElementById('pair-comparison-page').style.display = 'block';
+        }
+        
+        function calculateTLX() {
+            const tlxResults = {};
+            const individualIndexes = {};
+    
+            factors.forEach(factor => {
+                const selectedValue = document.querySelector(`input[name="${factor.toLowerCase().replace(' ', '-')}"]:checked`);
+                if (selectedValue) {
+                    tlxResults[factor] = parseInt(selectedValue.value);
+                } else {
+                    tlxResults[factor] = 0;
+                }
+            });
+    
+            const finalResultsContainer = document.getElementById('final-results');
+            finalResultsContainer.style.display = 'block';
+    
+            let globalIndex = 0;
+            factors.forEach(factor => {
+                // Calculate the Individual Index
+                const weightResult = weights[factor];
+                const individualIndex = Math.round((weightResult / 15) * tlxResults[factor]);
+                individualIndexes[factor] = individualIndex;
+                globalIndex += individualIndex;
+    
+                // Update the UI with the final results
+                document.getElementById(`final-${factor.toLowerCase().replace(' ', '-')}`).textContent = tlxResults[factor];
+            });
+    
+            document.getElementById('tlx-score').textContent = globalIndex;
+    
+            participants.push({
+                name: document.getElementById('name').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                blockSection: document.getElementById('block-section').value,
+                occupation: document.getElementById('occupation').value,
+                tlxResults: tlxResults,
+                individualIndexes: individualIndexes,
+                tlxScore: globalIndex,
+                weights: { ...weights }
+            });
+        }
+        
+        function generateLineScales() {
+            scales.forEach(scale => {
+                let container = document.getElementById(`${scale.toLowerCase().replace(" ", "-")}-container`);
+                container.innerHTML = `
+                    <label class="scale-label left">Low</label>
+                    <label class="scale-label right">High</label>
+                    <div class="horizontal-line"></div>
+                `;
+                for (let i = 0; i <= 100; i += 5) {
+                    let label = document.createElement("label");
+                    label.innerHTML = `<span data-value="${i}"></span>`;
+                    let radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = `${scale.toLowerCase().replace(" ", "-")}`;
+                    radio.value = i;
+                    radio.id = `${scale.toLowerCase().replace(" ", "-")}-${i}`;
+                    label.setAttribute("for", `${scale.toLowerCase().replace(" ", "-")}-${i}`);
+                    container.appendChild(radio);
+                    container.appendChild(label);
+                }
+            });
+        }
+        
+        function generateReport() {
+            document.getElementById('tlx-page').style.display = 'none';
+            document.getElementById('report-page').style.display = 'block';
+        
+            const reportContainer = document.getElementById('report');
+            reportContainer.innerHTML = ''; // Clear any existing content
+        
+            participants.forEach(participant => {
+                let reportHtml = `<h3>Participant: ${participant.name}</h3>`;
+                reportHtml += `<p>Age: ${participant.age}</p>`;
+                reportHtml += `<p>Gender: ${participant.gender}</p>`;
+                reportHtml += `<p>Block Section: ${participant.blockSection}</p>`;
+                reportHtml += `<p>Occupation: ${participant.occupation}</p>`;
+                reportHtml += '<table>';
+                reportHtml += '<tr><th>Factor</th><th>Weight</th><th>Rate</th><th>Weight x Rate</th><th>Individual Index</th></tr>';
+        
+                factors.forEach(factor => {
+                    const weightResult = participant.weights[factor];
+                    const rate = participant.tlxResults[factor];
+                    const weightXRate = weightResult * rate;
+                    const individualIndex = participant.individualIndexes[factor];
+                    reportHtml += `<tr>
+                        <td>${factor}</td>
+                        <td>${weightResult}</td>
+                        <td>${rate}</td>
+                        <td>${weightXRate}</td>
+                        <td>${individualIndex}</td>
+                    </tr>`;
+                });
+        
+                reportHtml += '</table>';
+                reportHtml += `<p><strong>Perceived Workload - Global Index: ${participant.tlxScore}</strong></p>`;
+                reportContainer.innerHTML += reportHtml;
+            });
+        } 
+    </script>
