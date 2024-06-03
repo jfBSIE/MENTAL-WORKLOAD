@@ -7,18 +7,20 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #1E90FF; /* Blue background */
-            color: #FFFFFF; /* White text color for contrast */
+            background: url('https://wallpapercave.com/wp/wp3423610.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            color: #FFFFFF;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
 
         .container {
-            background-color: #FFFFFF; /* White background for containers */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -70,7 +72,10 @@
             background-color: #FF4500; /* Darker orange on hover */
         }
 
-        #result, #pair-results, #final-results, #report {
+        #result,
+        #pair-results,
+        #final-results,
+        #report {
             margin-top: 20px;
         }
 
@@ -119,8 +124,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 10px;
-        }
+        }  
 
         .comparison-container label {
             margin: 0 10px;
@@ -129,14 +133,14 @@
         .slider-container {
             margin-bottom: -10px;
         }
-        
+
         .question {
             text-align: center;
             font-size: 16px;
             margin-bottom: -20px;
             color: #000000; /* Black text color */
         }
-        
+
         .line-scale {
             position: relative;
             height: 60px;
@@ -144,22 +148,22 @@
             display: flex;
             align-items: center;
         }
-        
+
         .scale-label {
             position: absolute;
             top: 45px;
             font-size: 14px;
             color: #000000; /* Black text color */
         }
-        
+
         .scale-label.left {
             left: 0;
         }
-        
+
         .scale-label.right {
             right: 0;
         }
-        
+
         .line-scale .horizontal-line {
             position: absolute;
             top: 50%;
@@ -168,14 +172,14 @@
             height: 1px;
             background: #000000; /* Black line */
         }
-        
+
         .line-scale label {
             position: relative;
             text-align: center;
             flex: 1;
             cursor: pointer;
         }
-        
+
         .line-scale label span {
             display: block;
             width: 1px;
@@ -184,13 +188,13 @@
             margin: 0 auto;
             position: relative;
         }
-        
+
         .line-scale label span[data-value="50"] {
             height: 30px;
             background: #000000;
             font-weight: bold;
         }
-        
+
         .line-scale label span::before {
             content: '';
             position: absolute;
@@ -204,16 +208,16 @@
             background: transparent;
             cursor: pointer;
         }
-        
+
         .line-scale input[type="radio"] {
             display: none;
         }
-        
+
         .line-scale input[type="radio"]:checked + label span::before {
             background-color: transparent;
             border-color: #1E90FF; /* Blue border when selected */
         }                                 
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -233,14 +237,47 @@
             list-style-type: none; 
             padding: 0;
         }
+
+        #landing-page {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('https://tint.creativemarket.com/jbWs3bqOxqXtXXF_envHvL0zKgLrpblKZdwociVS-ro/width:1200/height:800/gravity:nowe/rt:fill-down/el:1/czM6Ly9maWxlcy5jcmVhdGl2ZW1hcmtldC5jb20vaW1hZ2VzL3NjcmVlbnNob3RzL3Byb2R1Y3RzLzY5OC82OTg3LzY5ODcyMzIvMi1vLmpwZw?1568805886&fmt=webp.jfif') no-repeat center center fixed; 
+            background-size: cover;
+        }
+
+        #landing-page button {
+            background-color: #FFFFFF; /* White background */
+            color: #000000; /* Black text color for contrast */
+        }
+
+        /* You can also add a hover effect if needed */
+        #landing-page button:hover {
+            background-color: #f0f0f0; /* Slightly darker white on hover */
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 20px; /* Adjust margin as needed */
+        }
+        
+        h1.title {
+            margin: 0;
+            font-size: 3em;
+            color: white;
+        }
     </style>
 </head> 
 <body>
-    <div class="container" id="landing-page">
-        <h1>NASA Task Load Index (TLX)</h1>
+    <div id="landing-page">
         <button onclick="showFormPage()">Get Started</button>
     </div>
-
+   
+    <h1 class="title">Task Load Index (TLX)</h1>
     <div class="container" id="form-page" style="display:none;">
         <h2>Participant Information</h2>
         <form id="info-form">
@@ -254,7 +291,11 @@
             </div>
             <div class="input-container">
                 <label for="gender">Gender:</label>
-                <input type="text" id="gender" name="gender" required>
+                <select id="gender" name="gender">
+                    <option value="none">Prefer not to say</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
             </div>
             <div class="input-container">
                 <label for="block-section">Block Section:</label>
@@ -333,14 +374,14 @@
             <h2>Perceived Workload - Global Index: <span id="tlx-score">0</span></h2>
         </div>
         <button type="button" onclick="goBackToPairComparisonPage()">Back</button>
-        <button type="button" onclick="calculateTLX()">Calculate TLX</button>
-        <button type="button" onclick="generateReport()">Generate Report</button>        
+        <button type="button" onclick="calculateRating()">Generate Report</button>      
     </div>
 
     <div class="container" id="report-page" style="display:none;">
         <h2>Participants Report</h2>
         <div id="report"></div>
-    </div>
+        <button type="button" onclick="goBackToLandingPage()">Done</button> <!-- Added Done button -->
+    </div>  
 
     <script>
         const factors = ['Mental Demand', 'Physical Demand', 'Temporal Demand', 'Performance', 'Effort', 'Frustration'];
@@ -353,6 +394,24 @@
             "Effort": 5,
             "Frustration": 1
         };
+
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            let valid = true;
+        
+            // Check if all required fields are filled
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valid = false;
+                    input.style.borderColor = 'red'; // Highlight empty fields
+                } else {
+                    input.style.borderColor = ''; // Reset the border color if filled
+                }
+            });
+        
+            return valid;
+        }        
     
         function showFormPage() {
             document.getElementById('landing-page').style.display = 'none';
@@ -360,9 +419,14 @@
         }
     
         function showPairComparisonPage() {
+            if (!validateForm('info-form')) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
             document.getElementById('form-page').style.display = 'none';
             document.getElementById('pair-comparison-page').style.display = 'block';
-    
+        
             const pairComparisons = [
                 ['Mental Demand', 'Physical Demand'],
                 ['Mental Demand', 'Temporal Demand'],
@@ -380,42 +444,42 @@
                 ['Performance', 'Frustration'],
                 ['Effort', 'Frustration']
             ];
-    
+        
             const pairComparisonForm = document.getElementById('pair-comparison-form');
             pairComparisonForm.innerHTML = ''; // Clear any existing content
-    
+        
             pairComparisons.forEach((pair, index) => {
                 const comparisonContainer = document.createElement('div');
                 comparisonContainer.className = 'comparison-container';
-    
+        
                 const radio1 = document.createElement('input');
                 radio1.type = 'radio';
                 radio1.id = `pair-${index}-1`;
                 radio1.name = `pair-${index}`;
                 radio1.value = pair[0];
                 comparisonContainer.appendChild(radio1);
-    
+        
                 const label1 = document.createElement('label');
                 label1.htmlFor = `pair-${index}-1`;
                 label1.textContent = pair[0];
                 comparisonContainer.appendChild(label1);
-    
+        
                 const radio2 = document.createElement('input');
                 radio2.type = 'radio';
                 radio2.id = `pair-${index}-2`;
                 radio2.name = `pair-${index}`;
                 radio2.value = pair[1];
                 comparisonContainer.appendChild(radio2);
-    
+        
                 const label2 = document.createElement('label');
                 label2.htmlFor = `pair-${index}-2`;
                 label2.textContent = pair[1];
                 comparisonContainer.appendChild(label2);
-    
+        
                 pairComparisonForm.appendChild(comparisonContainer);
             });
         }
-    
+        
         function showPairResults() {
             const pairResultsContainer = document.getElementById('pair-results');
             pairResultsContainer.innerHTML = ''; // Clear any existing content
@@ -444,6 +508,12 @@
         }
     
         function showTLXPage() {
+            const pairComparisons = document.querySelectorAll('#pair-comparison-form input[type="radio"]:checked');
+            if (pairComparisons.length < 15) {
+                alert('Please complete all pair comparisons.');
+                return;
+            }
+        
             document.getElementById('pair-comparison-page').style.display = 'none';
             document.getElementById('tlx-page').style.display = 'block';
         
@@ -490,8 +560,36 @@
                     }
                 });
             });
-        }                      
-        
+        }
+
+        function clearData() {
+            // Reset the forms
+            document.getElementById('info-form').reset();
+            document.getElementById('pair-comparison-form').reset();
+            document.getElementById('tlx-form').reset();
+            
+            // Hide sections
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('pair-comparison-page').style.display = 'none';
+            document.getElementById('tlx-page').style.display = 'none';
+            document.getElementById('final-results').style.display = 'none';
+            document.getElementById('report-page').style.display = 'none';
+            
+            // Clear the pair results and report content
+            document.getElementById('pair-results').innerHTML = '';
+            document.getElementById('report').innerHTML = '';
+            
+            // Clear the participants array
+            participants.length = 0;
+            
+            // Redirect to the landing page
+            document.getElementById('landing-page').style.display = 'block';
+        }
+
+        function goBackToLandingPage() {
+            clearData(); // Clear all data and reset the form
+        }
+
         function goBackToFormPage() {
             document.getElementById('pair-comparison-page').style.display = 'none';
             document.getElementById('form-page').style.display = 'block';
@@ -502,22 +600,36 @@
             document.getElementById('pair-comparison-page').style.display = 'block';
         }
         
-        function calculateTLX() {
+        function calculateRating() {
+            const factors = [
+                'Mental Demand',
+                'Physical Demand',
+                'Temporal Demand',
+                'Performance',
+                'Effort',
+                'Frustration'
+            ];
+        
             const tlxResults = {};
             const individualIndexes = {};
-    
+        
+            let allAnswered = true;
             factors.forEach(factor => {
                 const selectedValue = document.querySelector(`input[name="${factor.toLowerCase().replace(' ', '-')}"]:checked`);
                 if (selectedValue) {
                     tlxResults[factor] = parseInt(selectedValue.value);
                 } else {
-                    tlxResults[factor] = 0;
+                    allAnswered = false;
+                    alert(`Please rate all the factors.`);
+                    return;
                 }
             });
-    
+        
+            if (!allAnswered) return;
+        
             const finalResultsContainer = document.getElementById('final-results');
             finalResultsContainer.style.display = 'block';
-    
+        
             let globalIndex = 0;
             factors.forEach(factor => {
                 // Calculate the Individual Index
@@ -525,13 +637,13 @@
                 const individualIndex = Math.round((weightResult / 15) * tlxResults[factor]);
                 individualIndexes[factor] = individualIndex;
                 globalIndex += individualIndex;
-    
+        
                 // Update the UI with the final results
                 document.getElementById(`final-${factor.toLowerCase().replace(' ', '-')}`).textContent = tlxResults[factor];
             });
-    
+        
             document.getElementById('tlx-score').textContent = globalIndex;
-    
+        
             participants.push({
                 name: document.getElementById('name').value,
                 age: document.getElementById('age').value,
@@ -543,7 +655,9 @@
                 tlxScore: globalIndex,
                 weights: { ...weights }
             });
-        }
+        
+            generateReport();
+        }        
         
         function generateLineScales() {
             scales.forEach(scale => {
