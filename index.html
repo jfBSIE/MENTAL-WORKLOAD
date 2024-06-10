@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA TLX App</title>
+    <title>NASA TLX WEBSITE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -246,18 +246,19 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: url('https://tint.creativemarket.com/jbWs3bqOxqXtXXF_envHvL0zKgLrpblKZdwociVS-ro/width:1200/height:800/gravity:nowe/rt:fill-down/el:1/czM6Ly9maWxlcy5jcmVhdGl2ZW1hcmtldC5jb20vaW1hZ2VzL3NjcmVlbnNob3RzL3Byb2R1Y3RzLzY5OC82OTg3LzY5ODcyMzIvMi1vLmpwZw?1568805886&fmt=webp.jfif') no-repeat center center fixed; 
+            background: url('https://wallpapercave.com/wp/wp3423610.jpg') no-repeat center center fixed; 
             background-size: cover;
         }
 
         #landing-page button {
-            background-color: #FFFFFF; /* White background */
-            color: #000000; /* Black text color for contrast */
+            background-color: #FFA500; 
+            margin-top: 620px;
+            color: #FFFFFF;
         }
 
         /* You can also add a hover effect if needed */
         #landing-page button:hover {
-            background-color: #f0f0f0; /* Slightly darker white on hover */
+            background-color: #FF4500; 
         }
 
         .title-container {
@@ -267,17 +268,76 @@
         
         h1.title {
             margin: 0;
-            font-size: 3em;
+            font-size: 50px;
             color: white;
+        }
+
+        .centered-button {
+            display: block;
+            margin: 20px auto;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #landing-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        
+        #other-section {
+            display: none;
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #instruction-page-1 p, #instruction-page-2 p {
+            font-size: 20px; /* Increase this value as needed */
+        }
+        
+        #instruction-page-2 ul li {
+            font-size: 20px; /* Increase this value as needed */
+        }
+        
+        #done {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .center {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .normal {
+            position: static;
+            transform: none;
         }
     </style>
 </head> 
 <body>
     <div id="landing-page">
-        <button onclick="showFormPage()">Get Started</button>
+        <button id="get-started">Get Started</button>
     </div>
-   
-    <h1 class="title"> NASA Task Load Index (TLX)</h1>
+    <div id="other-section">
+        <button id="done">Done</button>
+    </div>
+
+    <h1 class="title">Task Load Index (TLX)</h1>
     <div class="container" id="form-page" style="display:none;">
         <h2>Participant Information</h2>
         <form id="info-form">
@@ -292,22 +352,27 @@
             <div class="input-container">
                 <label for="gender">Gender:</label>
                 <select id="gender" name="gender">
-                    <option value="none">Prefer not to say</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
             </div>
             <div class="input-container">
-                <label for="block-section">Block Section:</label>
+                <label for="block-section">Course/Profession:</label>
                 <input type="text" id="block-section" name="block-section" required>
             </div>
             <div class="input-container">
                 <label for="occupation">Occupation:</label>
                 <input type="text" id="occupation" name="occupation" required>
             </div>
-            <button type="button" onclick="showPairComparisonPage()">Next</button>
+            <button type="button" onclick="showInstructionPage1(); this.parentElement.style.display = 'none'">Next</button>
         </form>
     </div>
+
+    <div class="container" id="instruction-page-1" style="display:none;">
+        <h2>Instruction</h2>
+        <p>Determine your source of load weight, choose between each pair of load weight sources. Identifying the Load Weight Sources you should have a clear understanding of the load weight sources available to you.</p>
+        <button type="button" onclick="showPairComparisonPage(); this.parentElement.style.display = 'none'">Next</button>
+    </div>    
 
     <div class="container" id="pair-comparison-page" style="display:none;">
         <h2>Source of Load (Weight)</h2>
@@ -319,8 +384,21 @@
             <h2>Results - Pairs</h2>
             <!-- Pair results will be displayed here -->
         </div>
-        <button type="button" onclick="goBackToFormPage()">Back</button>
-        <button type="button" onclick="showTLXPage()">Next</button>
+        <button type="button" onclick="goBackToFormPage(); this.parentElement.style.display = 'none'">Back</button>
+        <button type="button" onclick="showInstructionPage2(); this.parentElement.style.display = 'none'">Next</button>
+    </div>
+
+    <div class="container" id="instruction-page-2" style="display:none;">
+        <h2>Instruction</h2>
+        <p>Rate yourself on the magnitude that best fits you.</p>
+        <ul>
+            <li>The mental workload is Very Low: 0-20</li>
+            <li>The mental workload is Low: 21-40 </li>
+            <li>The mental workload is Moderate: 41-60</li>
+            <li>The mental workload is High: 61-80 </li>
+            <li>The mental workload is Very High: 81-100</li>
+        </ul>
+        <button type="button" onclick="showTLXPage(); this.parentElement.style.display = 'none'">Next</button>
     </div>
 
     <div class="container" id="tlx-page" style="display:none;">
@@ -373,8 +451,8 @@
             <p>Frustration: <span id="final-frustration">0</span></p>
             <h2>Perceived Workload - Global Index: <span id="tlx-score">0</span></h2>
         </div>
-        <button type="button" onclick="goBackToPairComparisonPage()">Back</button>
-        <button type="button" onclick="calculateRating()">Generate Report</button>      
+        <button type="button" onclick="goBackToPairComparisonPage(); this.parentElement.style.display = 'none'">Back</button>
+        <button type="button" onclick="calculateRating(); this.parentElement.style.display = 'none'">Generate Report</button>     
     </div>
 
     <div class="container" id="report-page" style="display:none;">
@@ -384,6 +462,16 @@
     </div>  
 
     <script>
+        document.getElementById('get-started').addEventListener('click', showFormPage);
+            // To ensure the "Get Started" button is in the normal position when navigating back
+            window.addEventListener("popstate", function() {
+                getStartedButton.classList.add("normal");
+                getStartedButton.classList.remove("center");
+                landingPage.style.display = "flex";
+                otherSection.style.display = "none";
+            });
+        
+
         const factors = ['Mental Demand', 'Physical Demand', 'Temporal Demand', 'Performance', 'Effort', 'Frustration'];
         const participants = [];
         const weights = {
@@ -411,6 +499,16 @@
             });
         
             return valid;
+        }    
+        
+        function showInstructionPage1() {    
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('instruction-page-1').style.display = 'block';
+        }
+        
+        function showInstructionPage2() {
+            document.getElementById('pair-comparison-page').style.display = 'none';
+            document.getElementById('instruction-page-2').style.display = 'block';
         }        
     
         function showFormPage() {
@@ -428,20 +526,20 @@
             document.getElementById('pair-comparison-page').style.display = 'block';
         
             const pairComparisons = [
-                ['Mental Demand', 'Physical Demand'],
+                ['Effort', 'Performance'],
+                ['Frustration', 'Mental Demand'],
                 ['Mental Demand', 'Temporal Demand'],
-                ['Mental Demand', 'Performance'],
+                ['Performance', 'Mental Demand'],
                 ['Mental Demand', 'Effort'],
-                ['Mental Demand', 'Frustration'],
-                ['Physical Demand', 'Temporal Demand'],
-                ['Physical Demand', 'Performance'],
-                ['Physical Demand', 'Effort'],
-                ['Physical Demand', 'Frustration'],
-                ['Temporal Demand', 'Performance'],
-                ['Temporal Demand', 'Effort'],
+                ['Mental Demand', 'Physical Demand'],
+                ['Effort', 'Physical Demand'],
                 ['Temporal Demand', 'Frustration'],
-                ['Performance', 'Effort'],
                 ['Performance', 'Frustration'],
+                ['Temporal Demand', 'Physical Demand'],
+                ['Temporal Demand', 'Effort'],
+                ['Performance', 'Temporal Demand'],
+                ['Physical Demand', 'Frustration'],
+                ['Physical Demand', 'Performance'],
                 ['Effort', 'Frustration']
             ];
         
@@ -586,10 +684,6 @@
             document.getElementById('landing-page').style.display = 'block';
         }
 
-        function goBackToLandingPage() {
-            clearData(); // Clear all data and reset the form
-        }
-
         function goBackToFormPage() {
             document.getElementById('pair-comparison-page').style.display = 'none';
             document.getElementById('form-page').style.display = 'block';
@@ -598,6 +692,10 @@
         function goBackToPairComparisonPage() {
             document.getElementById('tlx-page').style.display = 'none';
             document.getElementById('pair-comparison-page').style.display = 'block';
+        }
+        
+        function goBackToLandingPage() {
+            clearData(); // Clear all data and reset the form
         }
         
         function calculateRating() {
@@ -714,7 +812,25 @@
         
                 reportHtml += '</table>';
                 reportHtml += `<p><strong>Perceived Workload - Global Index: ${participant.tlxScore}</strong></p>`;
+
+                const globalIndex = participant.tlxScore;
+                let interpretation = '';
+        
+                if (globalIndex >= 0 && globalIndex <= 20) {
+                    interpretation = 'The mental workload is Very Low.';
+                } else if (globalIndex >= 21 && globalIndex <= 40) {
+                    interpretation = 'The mental workload is Low.';
+                } else if (globalIndex >= 41 && globalIndex <= 60) {
+                    interpretation = 'The mental workload is Moderate.';
+                } else if (globalIndex >= 61 && globalIndex <= 80) {
+                    interpretation = 'The mental workload is High.';
+                } else if (globalIndex >= 81 && globalIndex <= 100) {
+                    interpretation = 'The mental workload is Very High.';
+                }
+        
+                reportHtml += `<p><strong>Global Index Interpretation:</strong> ${interpretation}</p>`; 
+        
                 reportContainer.innerHTML += reportHtml;
             });
-        } 
+        }
     </script>
