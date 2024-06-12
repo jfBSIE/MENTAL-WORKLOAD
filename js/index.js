@@ -11,361 +11,214 @@ window.addEventListener("popstate", function() {
 const factors = ['Mental Demand', 'Physical Demand', 'Temporal Demand', 'Performance', 'Effort', 'Frustration'];
 const participants = [];
 const weights = {
-"Mental Demand": 2,
-"Physical Demand": 2,
-"Temporal Demand": 1,
-"Performance": 4,
-"Effort": 5,
-"Frustration": 1
+    "Mental Demand": 2,
+    "Physical Demand": 2,
+    "Temporal Demand": 1,
+    "Performance": 4,
+    "Effort": 5,
+    "Frustration": 1
 };
 
 function validateForm(formId) {
-const form = document.getElementById(formId);
-let valid = true;
-
-// Check if all required fields are filled
-const inputs = form.querySelectorAll('input[required], select[required]');
-inputs.forEach(input => {
-    if (!input.value.trim()) {
-        valid = false;
-        input.style.borderColor = 'red'; // Highlight empty fields
-    } else {
-        input.style.borderColor = ''; // Reset the border color if filled
+    const form = document.getElementById(formId);
+    const inputs = form.querySelectorAll('input, select');
+    for (let input of inputs) {
+        if (input.hasAttribute('required') && !input.value) {
+            alert('Please fill out all required fields.');
+            return false;
+        }
     }
-});
-
-return valid;
-}    
-
-function showInstructionPage1() {    
-document.getElementById('form-page').style.display = 'none';
-document.getElementById('instruction-page-1').style.display = 'block';
+    return true;
 }
 
-function showInstructionPage2() {
-document.getElementById('pair-comparison-page').style.display = 'none';
-document.getElementById('instruction-page-2').style.display = 'block';
-}        
-
 function showFormPage() {
-document.getElementById('landing-page').style.display = 'none';
-document.getElementById('form-page').style.display = 'block';
+    if (!validateForm('info-form')) return;
+    document.getElementById('form-page').style.display = 'block';
+    document.getElementById('landing-page').style.display = 'none';
+}
+
+function showInstructionPage1() {
+    document.getElementById('instruction-page-1').style.display = 'block';
 }
 
 function showPairComparisonPage() {
-if (!validateForm('info-form')) {
-    alert('Please fill in all required fields.');
-    return;
+    document.getElementById('pair-comparison-page').style.display = 'block';
+    generatePairComparisons();
 }
 
-document.getElementById('form-page').style.display = 'none';
-document.getElementById('pair-comparison-page').style.display = 'block';
-
-const pairComparisons = [
-    ['Effort', 'Performance'],
-    ['Frustration', 'Mental Demand'],
-    ['Mental Demand', 'Temporal Demand'],
-    ['Performance', 'Mental Demand'],
-    ['Mental Demand', 'Effort'],
-    ['Mental Demand', 'Physical Demand'],
-    ['Effort', 'Physical Demand'],
-    ['Temporal Demand', 'Frustration'],
-    ['Performance', 'Frustration'],
-    ['Temporal Demand', 'Physical Demand'],
-    ['Temporal Demand', 'Effort'],
-    ['Performance', 'Temporal Demand'],
-    ['Physical Demand', 'Frustration'],
-    ['Physical Demand', 'Performance'],
-    ['Effort', 'Frustration']
-];
-
-const pairComparisonForm = document.getElementById('pair-comparison-form');
-pairComparisonForm.innerHTML = ''; // Clear any existing content
-
-pairComparisons.forEach((pair, index) => {
-    const comparisonContainer = document.createElement('div');
-    comparisonContainer.className = 'comparison-container';
-
-    const radio1 = document.createElement('input');
-    radio1.type = 'radio';
-    radio1.id = `pair-${index}-1`;
-    radio1.name = `pair-${index}`;
-    radio1.value = pair[0];
-    comparisonContainer.appendChild(radio1);
-
-    const label1 = document.createElement('label');
-    label1.htmlFor = `pair-${index}-1`;
-    label1.textContent = pair[0];
-    comparisonContainer.appendChild(label1);
-
-    const radio2 = document.createElement('input');
-    radio2.type = 'radio';
-    radio2.id = `pair-${index}-2`;
-    radio2.name = `pair-${index}`;
-    radio2.value = pair[1];
-    comparisonContainer.appendChild(radio2);
-
-    const label2 = document.createElement('label');
-    label2.htmlFor = `pair-${index}-2`;
-    label2.textContent = pair[1];
-    comparisonContainer.appendChild(label2);
-
-    pairComparisonForm.appendChild(comparisonContainer);
-});
-}
-
-function showPairResults() {
-const pairResultsContainer = document.getElementById('pair-results');
-pairResultsContainer.innerHTML = ''; // Clear any existing content
-
-const selectedPairs = {};
-
-factors.forEach(factor => {
-    selectedPairs[factor] = 0;
-});
-
-const pairComparisons = document.querySelectorAll('#pair-comparison-form input[type="radio"]:checked');
-
-pairComparisons.forEach(pair => {
-    selectedPairs[pair.value]++;
-});
-
-let resultHtml = '<ul>';
-factors.forEach(factor => {
-    resultHtml += `<li>${factor}: ${selectedPairs[factor]}</li>`;
-    weights[factor] = selectedPairs[factor];
-});
-resultHtml += '</ul>';
-
-pairResultsContainer.innerHTML = resultHtml;
-pairResultsContainer.style.display = 'block';
+function showInstructionPage2() {
+    document.getElementById('instruction-page-2').style.display = 'block';
 }
 
 function showTLXPage() {
-const pairComparisons = document.querySelectorAll('#pair-comparison-form input[type="radio"]:checked');
-if (pairComparisons.length < 15) {
-    alert('Please complete all pair comparisons.');
-    return;
+    document.getElementById('tlx-page').style.display = 'block';
+    generateTLXSliders();
 }
 
-document.getElementById('pair-comparison-page').style.display = 'none';
-document.getElementById('tlx-page').style.display = 'block';
-
-const factors = [
-    'Mental Demand',
-    'Physical Demand',
-    'Temporal Demand',
-    'Performance',
-    'Effort',
-    'Frustration'
-];
-
-const questions = {
-    'Mental Demand': 'How mentally demanding was the task?',
-    'Physical Demand': 'How physically demanding was the task?',
-    'Temporal Demand': 'How hurried or rushed was the pace of the task?',
-    'Performance': 'How successful were you in accomplishing what you were asked to do?',
-    'Effort': 'How hard did you have to work to accomplish your level of performance?',
-    'Frustration': 'How insecure, discouraged, irritated, stressed, and annoyed were you?'
-};
-
-factors.forEach(factor => {
-    const container = document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-container`);
-    container.innerHTML = `
-        <div class="horizontal-line"></div>
-        <span class="scale-label left">Very Low</span>
-        <span class="scale-label right">Very High</span>
-    `;
-    for (let i = 0; i <= 100; i += 5) {
-        const inputId = `${factor.toLowerCase().replace(' ', '-')}-${i}`;
-        container.innerHTML += `
-            <input type="radio" id="${inputId}" name="${factor.toLowerCase().replace(' ', '-')}" value="${i}">
-            <label for="${inputId}"><span data-value="${i}"></span></label>
-        `;
-    }
-});
-
-// Add event listeners to update the span text on selection
-factors.forEach(factor => {
-    const container = document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-container`);
-    container.addEventListener('change', (event) => {
-        if (event.target.type === 'radio') {
-            document.getElementById(`${factor.toLowerCase().replace(' ', '-')}-value`).textContent = event.target.value;
-        }
-    });
-});
-}
-
-function clearData() {
-// Reset the forms
-document.getElementById('info-form').reset();
-document.getElementById('pair-comparison-form').reset();
-document.getElementById('tlx-form').reset();
-
-// Hide sections
-document.getElementById('form-page').style.display = 'none';
-document.getElementById('pair-comparison-page').style.display = 'none';
-document.getElementById('tlx-page').style.display = 'none';
-document.getElementById('final-results').style.display = 'none';
-document.getElementById('report-page').style.display = 'none';
-
-// Clear the pair results and report content
-document.getElementById('pair-results').innerHTML = '';
-document.getElementById('report').innerHTML = '';
-
-// Clear the participants array
-participants.length = 0;
-
-// Redirect to the landing page
-document.getElementById('landing-page').style.display = 'block';
+function showPairResults() {
+    document.getElementById('pair-results').style.display = 'block';
+    calculateWeights();
 }
 
 function goBackToFormPage() {
-document.getElementById('pair-comparison-page').style.display = 'none';
-document.getElementById('form-page').style.display = 'block';
+    document.getElementById('form-page').style.display = 'block';
 }
 
 function goBackToPairComparisonPage() {
-document.getElementById('tlx-page').style.display = 'none';
-document.getElementById('pair-comparison-page').style.display = 'block';
+    document.getElementById('pair-comparison-page').style.display = 'block';
 }
 
 function goBackToLandingPage() {
-clearData(); // Clear all data and reset the form
+    document.getElementById('landing-page').style.display = 'block';
+    document.getElementById('form-page').style.display = 'none';
+    document.getElementById('instruction-page-1').style.display = 'none';
+    document.getElementById('pair-comparison-page').style.display = 'none';
+    document.getElementById('instruction-page-2').style.display = 'none';
+    document.getElementById('tlx-page').style.display = 'none';
+    document.getElementById('report-page').style.display = 'none';
+    
+    document.getElementById('info-form').reset();
+    document.getElementById('pair-comparison-form').innerHTML = '';
+    document.getElementById('tlx-form').innerHTML = '';
+    document.getElementById('final-results').style.display = 'none';
+    document.getElementById('pair-results').style.display = 'none';
+    document.getElementById('report').innerHTML = '';
 }
 
-function calculateRating() {
-const factors = [
-    'Mental Demand',
-    'Physical Demand',
-    'Temporal Demand',
-    'Performance',
-    'Effort',
-    'Frustration'
-];
+// Generate pair comparison form dynamically
+function generatePairComparisons() {
+    const container = document.getElementById('pair-comparison-form');
+    container.innerHTML = ''; // Clear previous content
 
-const tlxResults = {};
-const individualIndexes = {};
+    for (let i = 0; i < factors.length; i++) {
+        for (let j = i + 1; j < factors.length; j++) {
+            const pair = `${factors[i]} vs ${factors[j]}`;
+            const div = document.createElement('div');
+            div.classList.add('input-container');
 
-let allAnswered = true;
-factors.forEach(factor => {
-    const selectedValue = document.querySelector(`input[name="${factor.toLowerCase().replace(' ', '-')}"]:checked`);
-    if (selectedValue) {
-        tlxResults[factor] = parseInt(selectedValue.value);
-    } else {
-        allAnswered = false;
-        alert(`Please rate all the factors.`);
-        return;
+            const label = document.createElement('label');
+            label.innerText = pair;
+
+            const radio1 = document.createElement('input');
+            radio1.type = 'radio';
+            radio1.name = pair;
+            radio1.value = factors[i];
+
+            const label1 = document.createElement('label');
+            label1.innerText = factors[i];
+
+            const radio2 = document.createElement('input');
+            radio2.type = 'radio';
+            radio2.name = pair;
+            radio2.value = factors[j];
+
+            const label2 = document.createElement('label');
+            label2.innerText = factors[j];
+
+            div.appendChild(label);
+            div.appendChild(radio1);
+            div.appendChild(label1);
+            div.appendChild(radio2);
+            div.appendChild(label2);
+            container.appendChild(div);
+        }
     }
-});
-
-if (!allAnswered) return;
-
-const finalResultsContainer = document.getElementById('final-results');
-finalResultsContainer.style.display = 'block';
-
-let globalIndex = 0;
-factors.forEach(factor => {
-    // Calculate the Individual Index
-    const weightResult = weights[factor];
-    const individualIndex = Math.round((weightResult / 15) * tlxResults[factor]);
-    individualIndexes[factor] = individualIndex;
-    globalIndex += individualIndex;
-
-    // Update the UI with the final results
-    document.getElementById(`final-${factor.toLowerCase().replace(' ', '-')}`).textContent = tlxResults[factor];
-});
-
-document.getElementById('tlx-score').textContent = globalIndex;
-
-participants.push({
-    name: document.getElementById('name').value,
-    age: document.getElementById('age').value,
-    gender: document.getElementById('gender').value,
-    blockSection: document.getElementById('block-section').value,
-    occupation: document.getElementById('occupation').value,
-    tlxResults: tlxResults,
-    individualIndexes: individualIndexes,
-    tlxScore: globalIndex,
-    weights: { ...weights }
-});
-
-generateReport();
-}        
-
-function generateLineScales() {
-scales.forEach(scale => {
-    let container = document.getElementById(`${scale.toLowerCase().replace(" ", "-")}-container`);
-    container.innerHTML = `
-        <label class="scale-label left">Low</label>
-        <label class="scale-label right">High</label>
-        <div class="horizontal-line"></div>
-    `;
-    for (let i = 0; i <= 100; i += 5) {
-        let label = document.createElement("label");
-        label.innerHTML = `<span data-value="${i}"></span>`;
-        let radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = `${scale.toLowerCase().replace(" ", "-")}`;
-        radio.value = i;
-        radio.id = `${scale.toLowerCase().replace(" ", "-")}-${i}`;
-        label.setAttribute("for", `${scale.toLowerCase().replace(" ", "-")}-${i}`);
-        container.appendChild(radio);
-        container.appendChild(label);
-    }
-});
 }
 
-function generateReport() {
-document.getElementById('tlx-page').style.display = 'none';
-document.getElementById('report-page').style.display = 'block';
+// Calculate weights based on pair comparisons
+function calculateWeights() {
+    const form = document.getElementById('pair-comparison-form');
+    const selectedWeights = {};
 
-const reportContainer = document.getElementById('report');
-reportContainer.innerHTML = ''; // Clear any existing content
+    for (let input of form.querySelectorAll('input[type="radio"]:checked')) {
+        selectedWeights[input.value] = (selectedWeights[input.value] || 0) + 1;
+    }
 
-participants.forEach(participant => {
-    let reportHtml = `<h3>Participant: ${participant.name}</h3>`;
-    reportHtml += `<p>Age: ${participant.age}</p>`;
-    reportHtml += `<p>Gender: ${participant.gender}</p>`;
-    reportHtml += `<p>Course/Profession: ${participant.blockSection}</p>`;
-    reportHtml += `<p>Occupation: ${participant.occupation}</p>`;
-    reportHtml += '<table>';
-    reportHtml += '<tr><th>Factor</th><th>Weight</th><th>Rate</th><th>Weight x Rate</th><th>Individual Index</th></tr>';
+    const totalPairs = factors.length * (factors.length - 1) / 2;
+    const weights = factors.map(factor => selectedWeights[factor] / totalPairs);
+
+    for (let i = 0; i < factors.length; i++) {
+        weights[factors[i]] = weights[i];
+    }
+
+    document.getElementById('pair-results').innerText = JSON.stringify(weights, null, 2);
+}
+
+// Generate TLX sliders dynamically
+function generateTLXSliders() {
+    const container = document.getElementById('tlx-form');
+    container.innerHTML = ''; // Clear previous content
 
     factors.forEach(factor => {
-        const weightResult = participant.weights[factor];
-        const rate = participant.tlxResults[factor];
-        const weightXRate = weightResult * rate;
-        const individualIndex = participant.individualIndexes[factor];
-        reportHtml += `<tr>
-            <td>${factor}</td>
-            <td>${weightResult}</td>
-            <td>${rate}</td>
-            <td>${weightXRate}</td>
-            <td>${individualIndex}</td>
-        </tr>`;
+        const div = document.createElement('div');
+        div.classList.add('slider-container');
+
+        const question = document.createElement('p');
+        question.classList.add('question');
+        question.innerText = `How ${factor.toLowerCase()} was the task?`;
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `${factor.toLowerCase()}-demand`);
+        label.innerText = `${factor}: 0`;
+        label.id = `${factor.toLowerCase()}-demand-value`;
+
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = 0;
+        slider.max = 100;
+        slider.value = 0;
+        slider.id = `${factor.toLowerCase()}-demand`;
+        slider.name = `${factor.toLowerCase()}-demand`;
+        slider.addEventListener('input', () => {
+            document.getElementById(`${factor.toLowerCase()}-demand-value`).innerText = `${factor}: ${slider.value}`;
+        });
+
+        div.appendChild(question);
+        div.appendChild(label);
+        div.appendChild(slider);
+        container.appendChild(div);
     });
+}
 
-    reportHtml += '</table>';
-    reportHtml += `<p><strong>Perceived Workload - Global Index: ${participant.tlxScore}</strong></p>`;
-
-    const globalIndex = participant.tlxScore;
-    let interpretation = '';
-
-    if (globalIndex >= 0 && globalIndex <= 20) {
-        interpretation = 'The mental workload is Very Low.';
-    } else if (globalIndex >= 21 && globalIndex <= 40) {
-        interpretation = 'The mental workload is Low.';
-    } else if (globalIndex >= 41 && globalIndex <= 60) {
-        interpretation = 'The mental workload is Moderate.';
-    } else if (globalIndex >= 61 && globalIndex <= 80) {
-        interpretation = 'The mental workload is High.';
-    } else if (globalIndex >= 81 && globalIndex <= 100) {
-        interpretation = 'The mental workload is Very High.';
+// Calculate rating and display report
+function calculateRating() {
+    const form = document.getElementById('tlx-form');
+    const ratings = {};
+    
+    for (let factor of factors) {
+        ratings[factor] = form.querySelector(`#${factor.toLowerCase()}-demand`).value;
     }
+    
+    const report = {
+        "Mental Demand": ratings["Mental Demand"],
+        "Physical Demand": ratings["Physical Demand"],
+        "Temporal Demand": ratings["Temporal Demand"],
+        "Performance": ratings["Performance"],
+        "Effort": ratings["Effort"],
+        "Frustration": ratings["Frustration"]
+    };
 
-    reportHtml += `<p><strong>Global Index Interpretation:</strong> ${interpretation}</p>`; 
+    const weightedScore = factors.reduce((total, factor) => total + (weights[factor] * ratings[factor]), 0) / factors.length;
 
-    reportContainer.innerHTML += reportHtml;
-});
+    document.getElementById('final-results').style.display = 'block';
+    document.getElementById('final-mental-demand').innerText = ratings["Mental Demand"];
+    document.getElementById('final-physical-demand').innerText = ratings["Physical Demand"];
+    document.getElementById('final-temporal-demand').innerText = ratings["Temporal Demand"];
+    document.getElementById('final-performance').innerText = ratings["Performance"];
+    document.getElementById('final-effort').innerText = ratings["Effort"];
+    document.getElementById('final-frustration').innerText = ratings["Frustration"];
+    document.getElementById('tlx-score').innerText = weightedScore.toFixed(2);
+
+    const reportContainer = document.getElementById('report');
+    reportContainer.innerHTML = `
+        <p>Mental Demand: ${ratings["Mental Demand"]}</p>
+        <p>Physical Demand: ${ratings["Physical Demand"]}</p>
+        <p>Temporal Demand: ${ratings["Temporal Demand"]}</p>
+        <p>Performance: ${ratings["Performance"]}</p>
+        <p>Effort: ${ratings["Effort"]}</p>
+        <p>Frustration: ${ratings["Frustration"]}</p>
+        <h2>Perceived Workload - Global Index: ${weightedScore.toFixed(2)}</h2>
+    `;
+
+    document.getElementById('report-page').style.display = 'block';
 }
