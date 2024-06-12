@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA TLX WEBSITE</title>
+    <link rel="stylesheet" href="css/style.css">
+</head> 
+<body>
+    <header>
+        <h1 class="logo-name">NA<span>SA</span></h1>
+         
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="questionnaire.html">Questionnaire</a></li>
+          <li><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="main">
+    <div id="landing-page">
+        <button id="get-started">Get Started</button>
+    </div>
+
+    <h1 class="title">Task Load Index (TLX)</h1>
+    <div class="container" id="form-page" style="display:none;">
+        <h2>Participant Information</h2>
+        <form id="info-form">
+            <div class="input-container">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-container">
+                <label for="age">Age:</label>
+                <input type="text" id="age" name="age" required>
+            </div>
+            <div class="input-container">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="block-section">Course/Profession:</label>
+                <input type="text" id="block-section" name="block-section" required>
+            </div>
+            <div class="input-container">
+                <label for="occupation">Occupation:</label>
+                <input type="text" id="occupation" name="occupation" required>
+            </div>
+            <button type="button" onclick="showInstructionPage1(); this.parentElement.style.display = 'none'">Next</button>
+        </form>
+    </div>
+
+    <div class="container" id="instruction-page-1" style="display:none;">
+        <h2>Instruction</h2>
+        <p>Determine your source of load weight, choose between each pair of load weight sources. Identifying the Load Weight Sources you should have a clear understanding of the load weight sources available to you.</p>
+        <button type="button" onclick="showPairComparisonPage(); this.parentElement.style.display = 'none'">Next</button>
+    </div>    
+
+    <div class="container" id="pair-comparison-page" style="display:none;">
+        <h2>Source of Load (Weight)</h2>
+        <form id="pair-comparison-form">
+            <!-- Pair comparison radio buttons will be generated here -->
+        </form>
+        <button type="button" onclick="showPairResults()">Show Pair Results</button>
+        <div id="pair-results" style="display:none;">
+            <h2>Results - Pairs</h2>
+            <!-- Pair results will be displayed here -->
+        </div>
+        <button type="button" onclick="goBackToFormPage(); this.parentElement.style.display = 'none'">Back</button>
+        <button type="button" onclick="showInstructionPage2(); this.parentElement.style.display = 'none'">Next</button>
+    </div>
+
+    <div class="container" id="instruction-page-2" style="display:none;">
+        <h2>Instruction</h2>
+        <p>Rate yourself on the magnitude that best fits you.</p>
+        <ul>
+            <li>The mental workload is Very Low: 0-20</li>
+            <li>The mental workload is Low: 21-40 </li>
+            <li>The mental workload is Moderate: 41-60</li>
+            <li>The mental workload is High: 61-80 </li>
+            <li>The mental workload is Very High: 81-100</li>
+        </ul>
+        <button type="button" onclick="showTLXPage(); this.parentElement.style.display = 'none'">Next</button>
+    </div>
+
+    <div class="container" id="tlx-page" style="display:none;">
+        <h2>Magnitude of Load (Rating)</h2>
+        <form id="tlx-form">
+            <div class="slider-container">
+                <p class="question">How mentally demanding was the task?</p>
+                <label for="mental-demand">Mental Demand: <span id="mental-demand-value">0</span></label>
+                <div class="line-scale" id="mental-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How physically demanding was the task?</p>
+                <label for="physical-demand">Physical Demand: <span id="physical-demand-value">0</span></label>
+                <div class="line-scale" id="physical-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How hurried or rushed was the pace of the task?</p>
+                <label for="temporal-demand">Temporal Demand: <span id="temporal-demand-value">0</span></label>
+                <div class="line-scale" id="temporal-demand-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How successful were you in accomplishing what you were asked to do?</p>
+                <label for="performance">Performance: <span id="performance-value">0</span></label>
+                <div class="line-scale" id="performance-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How hard did you have to work to accomplish your level of performance?</p>
+                <label for="effort">Effort: <span id="effort-value">0</span></label>
+                <div class="line-scale" id="effort-container"></div>
+            </div>
+            
+            <div class="slider-container">
+                <p class="question">How insecure, discouraged, irritated, stressed, and annoyed were you?</p>
+                <label for="frustration">Frustration: <span id="frustration-value">0</span></label>
+                <div class="line-scale" id="frustration-container"></div>
+            </div>                                    
+            
+        </form>
+        <div id="final-results" style="display:none;">
+            <h2>Final Results</h2>
+            <p>Mental Demand: <span id="final-mental-demand">0</span></p>
+            <p>Physical Demand: <span id="final-physical-demand">0</span></p>
+            <p>Temporal Demand: <span id="final-temporal-demand">0</span></p>
+            <p>Performance: <span id="final-performance">0</span></p>
+            <p>Effort: <span id="final-effort">0</span></p>
+            <p>Frustration: <span id="final-frustration">0</span></p>
+            <h2>Perceived Workload - Global Index: <span id="tlx-score">0</span></h2>
+        </div>
+        <button type="button" onclick="goBackToPairComparisonPage(); this.parentElement.style.display = 'none'">Back</button>
+        <button type="button" onclick="calculateRating(); this.parentElement.style.display = 'none'">Generate Report</button>     
+    </div>
+
+    <div class="container" id="report-page" style="display:none;">
+        <h2>Participants Report</h2>
+        <div id="report"></div>
+        <button type="button" onclick="goBackToLandingPage()">Done</button> <!-- Added Done button -->
+    </div> 
+</div> 
+
+<script src="js/index.js"></script>
+</body>
