@@ -1,0 +1,205 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('https://wallpapercave.com/wp/wp3423610.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    color: #ffffff;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    width: 100%;
+    padding: 0 24px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255);
+    border-bottom: 3px ridge #ff5733;
+}
+
+.logo-name{
+    height: 50%;
+    width: 58px;
+    text-decoration: none;
+    color: #0066cc;
+    font-weight: 1000;
+    font-style: italic;
+    border-bottom: 2px solid #ff5733;
+    
+}
+
+.logo-name span{
+    color: #ff5733;
+}
+
+.nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-list {
+    display: flex;
+    gap: 16px;
+}
+
+.nav a{
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.nav ul{
+    list-style: none;
+}
+
+.nav-link, .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.nav-link {
+    background: rgba(255, 255, 255);
+    color: #333;
+}
+
+.nav-link:hover, .nav-link:focus {
+    background: #bbbbbb65;
+    color: #1a1a1a;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.container h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.button-container {
+    margin-left: auto;
+}
+
+.button {
+    padding: 8px 16px;
+    background: #0066cc;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button:hover {
+    background: #005bb5;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.input-container {
+    margin-bottom: 10px;
+}
+
+label, input, select, p {
+    display: block;
+    margin: 5px 0;
+    color: white;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+h1, h2 {
+    color: white;
+}
+
+.line-scale {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.line-scale::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #ccc;
+}
+
+.line-scale span {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.slider-container {
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
